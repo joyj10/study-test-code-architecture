@@ -2,17 +2,23 @@ package com.example.demo.service;
 
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.UserStatus;
+import com.example.demo.model.dto.UserCreateDto;
+import com.example.demo.model.dto.UserUpdateDto;
 import com.example.demo.repository.UserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @TestPropertySource("classpath:test-application.properties")
@@ -25,6 +31,9 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @DisplayName("이메일로 유저 조회 시 ACTIVE 상태의 유저가 조회된다.")
     @Test
@@ -50,6 +59,44 @@ class UserServiceTest {
         assertThatThrownBy(
                 () -> userService.getByEmail(email))
                 .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("UserCreateDto로 유저 저장이 정상적으로 된다.")
+    @Test
+    void create() {
+        // given
+        UserCreateDto createDto = UserCreateDto.builder()
+                .email("member3@test.com")
+                .nickname("member3")
+                .address("Seoul")
+                .build();
+
+        BDDMockito.doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
+
+        // when
+        UserEntity save = userService.create(createDto);
+
+        // then
+        assertThat(save).isNotNull();
+        assertThat(save.getStatus()).isEqualTo(UserStatus.PENDING);
+        assertThat(save.getEmail()).isEqualTo(createDto.getEmail());
+    }
+
+    @DisplayName("UserUpdateDto 로 유저 데이터가 변경된다.")
+    @Test
+    void update() {
+        // given
+        UserUpdateDto updateDto = UserUpdateDto.builder()
+                .nickname("member-update")
+                .address("Incheon")
+                .build();
+
+        // when
+        UserEntity userEntity = userService.update(1, updateDto);
+
+        // then
+        assertThat(userEntity.getNickname()).isEqualTo(updateDto.getNickname());
+        assertThat(userEntity.getAddress()).isEqualTo(updateDto.getAddress());
     }
 
 }

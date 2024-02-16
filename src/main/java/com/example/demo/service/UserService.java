@@ -7,14 +7,14 @@ import com.example.demo.model.dto.UserCreateDto;
 import com.example.demo.model.dto.UserUpdateDto;
 import com.example.demo.repository.UserEntity;
 import com.example.demo.repository.UserRepository;
-import java.time.Clock;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Clock;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +23,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
 
+    @Transactional(readOnly = true)
     public UserEntity getByEmail(String email) {
         return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
             .orElseThrow(() -> new ResourceNotFoundException("Users", email));
     }
 
+    @Transactional(readOnly = true)
     public UserEntity getById(long id) {
         return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
             .orElseThrow(() -> new ResourceNotFoundException("Users", id));
