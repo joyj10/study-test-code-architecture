@@ -71,6 +71,16 @@ class UserControllerTest {
         assertThat(userEntity.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
+
+    @DisplayName("사용자는 인증코드가 일치하지 않을 경우 권한 없음 예외를 던진다.")
+    @Test
+    void verifyEmail_exception() throws Exception {
+        mockMvc.perform(
+                        get("/api/users/2/verify")
+                                .queryParam("certificationCode", "aaaa-aaaa-aaaa-aaaa11111"))
+                .andExpect(status().isForbidden());
+    }
+
     @DisplayName("사용자 자신의 정보를 조회한다.")
     @Test
     void getMyInfo() throws Exception {
