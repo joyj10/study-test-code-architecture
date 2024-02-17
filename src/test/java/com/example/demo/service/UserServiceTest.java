@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.CertificationCodeNotMatchedException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.UserStatus;
 import com.example.demo.model.dto.UserCreateDto;
@@ -99,4 +100,40 @@ class UserServiceTest {
         assertThat(userEntity.getAddress()).isEqualTo(updateDto.getAddress());
     }
 
+    @DisplayName("로그인 시 마지막 로그인 시간이 변경된다.")
+    @Test
+    void login() {
+        // given
+        // when
+        userService.login(1);
+        // then
+        // TODO 로그인 시간 확인 방법이 없음
+    }
+
+    @DisplayName("PENDING 상태 사용자는 인증 코드로 ACTIVE로 상태값이 변경된다.")
+    @Test
+    void verifyEmail() {
+        // given
+        String code = "aaaa-aaaa-aaaa-aaaa";
+
+        // when
+        userService.verifyEmail(2, code);
+
+        // then
+        UserEntity findUser = userService.getById(2);
+        assertThat(findUser.getStatus()).isEqualTo(UserStatus.ACTIVE);
+    }
+
+
+    @DisplayName("PENDING 상태 사용자는 잘못된 인증 코드를 받으면 예외를 발생시킨다.")
+    @Test
+    void verifyEmail_incorrect_code() {
+        // given
+        String code = "aaaa-aaaa-aaaa-aaaa1";
+        // when
+        // then
+        assertThatThrownBy(
+                () -> userService.verifyEmail(2, code))
+                .isInstanceOf(CertificationCodeNotMatchedException.class);
+    }
 }
