@@ -1,7 +1,8 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.UserStatus;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.demo.user.domain.UserStatus;
+import com.example.demo.user.infrastructure.UserEntity;
+import com.example.demo.user.infrastructure.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class UserRepositoryTest {
         Optional<UserEntity> result = userRepository.findByIdAndStatus(1, UserStatus.ACTIVE);
 
         // then
-        assertThat(result.isPresent()).isTrue();
+        assertThat(result).isPresent();
     }
 
     @DisplayName("user id와 status 일치되는 데이터 없으면 조회 시 optional empty 리턴된다.")
@@ -51,7 +52,7 @@ class UserRepositoryTest {
         Optional<UserEntity> result = userRepository.findByIdAndStatus(1, UserStatus.PENDING);
 
         // then
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(result).isNotPresent();
     }
 
 
@@ -63,7 +64,7 @@ class UserRepositoryTest {
         Optional<UserEntity> result = userRepository.findByEmailAndStatus("member@test.com", UserStatus.ACTIVE);
 
         // then
-        assertThat(result.isPresent()).isTrue();
+        assertThat(result).isPresent();
     }
 
     @DisplayName("user email 과 status 일치되는 데이터가 없으면 empty 리턴된다.")
@@ -74,6 +75,6 @@ class UserRepositoryTest {
         Optional<UserEntity> result = userRepository.findByEmailAndStatus("member@test.com", UserStatus.PENDING);
 
         // then
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(result).isEmpty();
     }
 }

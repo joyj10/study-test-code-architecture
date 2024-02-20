@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.dto.UserCreateDto;
+import com.example.demo.user.domain.UserCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ class UserCreateControllerTest {
     @Test
     void createUser() throws Exception {
         // given
-        UserCreateDto createDto = UserCreateDto.builder()
+        UserCreate createDto = UserCreate.builder()
                 .email("member-new@test.com")
                 .nickname("member-new")
                 .address("Seoul")

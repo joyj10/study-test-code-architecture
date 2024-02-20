@@ -1,11 +1,12 @@
 package com.example.demo.service;
 
-import com.example.demo.exception.CertificationCodeNotMatchedException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.UserStatus;
-import com.example.demo.model.dto.UserCreateDto;
-import com.example.demo.model.dto.UserUpdateDto;
-import com.example.demo.repository.UserEntity;
+import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
+import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.user.domain.UserStatus;
+import com.example.demo.user.domain.UserCreate;
+import com.example.demo.user.domain.UserUpdate;
+import com.example.demo.user.infrastructure.UserEntity;
+import com.example.demo.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -65,7 +66,7 @@ class UserServiceTest {
     @Test
     void create() {
         // given
-        UserCreateDto createDto = UserCreateDto.builder()
+        UserCreate createDto = UserCreate.builder()
                 .email("member3@test.com")
                 .nickname("member3")
                 .address("Seoul")
@@ -86,7 +87,7 @@ class UserServiceTest {
     @Test
     void update() {
         // given
-        UserUpdateDto updateDto = UserUpdateDto.builder()
+        UserUpdate updateDto = UserUpdate.builder()
                 .nickname("member-update")
                 .address("Incheon")
                 .build();
