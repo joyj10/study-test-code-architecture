@@ -1,11 +1,8 @@
 package com.example.demo.post.service;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
+import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
-import com.example.demo.post.infrastructure.PostEntity;
-import com.example.demo.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.jdbc.SqlGroup;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @TestPropertySource("classpath:test-application.properties")
 @SqlGroup({
@@ -30,7 +29,7 @@ class PostServiceTest {
     void getById() {
         // given
         // when
-        PostEntity result = postService.getById(1);
+        Post result = postService.getById(1);
 
         // then
         assertThat(result.getContent()).isEqualTo("helloworld");
@@ -46,7 +45,7 @@ class PostServiceTest {
                 .build();
 
         // when
-        PostEntity result = postService.create(postCreate);
+        Post result = postService.create(postCreate);
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -66,9 +65,9 @@ class PostServiceTest {
         postService.update(1, postUpdate);
 
         // then
-        PostEntity postEntity= postService.getById(1);
-        assertThat(postEntity.getContent()).isEqualTo("hello world :)");
-        assertThat(postEntity.getModifiedAt()).isPositive();
+        Post post = postService.getById(1);
+        assertThat(post.getContent()).isEqualTo("hello world :)");
+        assertThat(post.getModifiedAt()).isPositive();
     }
 
 }

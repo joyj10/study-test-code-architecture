@@ -2,11 +2,10 @@ package com.example.demo.user.service;
 
 import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserUpdate;
-import com.example.demo.user.infrastructure.UserEntity;
-import com.example.demo.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -43,7 +42,7 @@ class UserServiceTest {
         String email = "member1@test.com";
 
         // when
-        UserEntity result = userService.getByEmail(email);
+        User result = userService.getByEmail(email);
 
         // then
         assertThat(result.getStatus()).isEqualTo(UserStatus.ACTIVE);
@@ -75,7 +74,7 @@ class UserServiceTest {
         BDDMockito.doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
 
         // when
-        UserEntity save = userService.create(createDto);
+        User save = userService.create(createDto);
 
         // then
         assertThat(save).isNotNull();
@@ -93,7 +92,7 @@ class UserServiceTest {
                 .build();
 
         // when
-        UserEntity userEntity = userService.update(1, updateDto);
+        User userEntity = userService.update(1, updateDto);
 
         // then
         assertThat(userEntity.getNickname()).isEqualTo(updateDto.getNickname());
@@ -120,7 +119,7 @@ class UserServiceTest {
         userService.verifyEmail(2, code);
 
         // then
-        UserEntity findUser = userService.getById(2);
+        User findUser = userService.getById(2);
         assertThat(findUser.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
