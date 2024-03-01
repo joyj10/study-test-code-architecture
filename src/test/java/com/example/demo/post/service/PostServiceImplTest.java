@@ -14,14 +14,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class PostServiceTest {
-    private PostService postService;
+class PostServiceImplTest {
+    private PostServiceImpl postServiceImpl;
 
     @BeforeEach
     void init() {
         FakeUserRepository fakeUserRepository = new FakeUserRepository();
         FakePostRepository fakePostRepository = new FakePostRepository();
-        this.postService = PostService.builder()
+        this.postServiceImpl = PostServiceImpl.builder()
                 .userRepository(fakeUserRepository)
                 .postRepository(fakePostRepository)
                 .clockHolder(new TestClockHolder(1678530673958L))
@@ -60,7 +60,7 @@ class PostServiceTest {
     void getById() {
         // given
         // when
-        Post result = postService.getById(1);
+        Post result = postServiceImpl.getById(1);
 
         // then
         assertThat(result.getContent()).isEqualTo("helloworld");
@@ -76,7 +76,7 @@ class PostServiceTest {
                 .build();
 
         // when
-        Post result = postService.create(postCreate);
+        Post result = postServiceImpl.create(postCreate);
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -93,10 +93,10 @@ class PostServiceTest {
                 .build();
 
         // when
-        postService.update(1, postUpdate);
+        postServiceImpl.update(1, postUpdate);
 
         // then
-        Post post = postService.getById(1);
+        Post post = postServiceImpl.getById(1);
         assertThat(post.getContent()).isEqualTo("hello world :)");
         assertThat(post.getModifiedAt()).isEqualTo(1678530673958L);
     }

@@ -3,7 +3,7 @@ package com.example.demo.medium;
 import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
-import com.example.demo.post.service.PostService;
+import com.example.demo.post.service.PostServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +20,17 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
         @Sql(value = "/sql/post-service-test-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/delete-all-data.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 })
-class PostServiceTest {
+class PostServiceImplTest {
 
     @Autowired
-    private PostService postService;
+    private PostServiceImpl postServiceImpl;
 
     @DisplayName("특정 id로 조회 시 게시물이 조회 된다.")
     @Test
     void getById() {
         // given
         // when
-        Post result = postService.getById(1);
+        Post result = postServiceImpl.getById(1);
 
         // then
         assertThat(result.getContent()).isEqualTo("helloworld");
@@ -46,7 +46,7 @@ class PostServiceTest {
                 .build();
 
         // when
-        Post result = postService.create(postCreate);
+        Post result = postServiceImpl.create(postCreate);
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -63,10 +63,10 @@ class PostServiceTest {
                 .build();
 
         // when
-        postService.update(1, postUpdate);
+        postServiceImpl.update(1, postUpdate);
 
         // then
-        Post post = postService.getById(1);
+        Post post = postServiceImpl.getById(1);
         assertThat(post.getContent()).isEqualTo("hello world :)");
         assertThat(post.getModifiedAt()).isPositive();
     }

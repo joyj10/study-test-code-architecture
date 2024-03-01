@@ -6,20 +6,20 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CertificationServiceTest {
+class CertificationServiceImplTest {
 
     @DisplayName("이메일과 컨텐츠가 제대로 만들어져서 보내진다.")
     @Test
     void send() {
         // given
         FakeMailSender fakeMailSender = new FakeMailSender();
-        CertificationService certificationService = new CertificationService(fakeMailSender);
+        CertificationServiceImpl certificationServiceImpl = new CertificationServiceImpl(fakeMailSender);
 
         // when
         String mail = "member1@test.com";
         String certificationCode = "aaaa-aaaa-aaaa-aaaa";
         int userId = 1;
-        certificationService.send(mail, userId, certificationCode);
+        certificationServiceImpl.send(mail, userId, certificationCode);
 
         // then
         assertThat(fakeMailSender.email).isEqualTo(mail);
