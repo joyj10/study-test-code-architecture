@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Builder
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserReadService, UserCreateService, UserUpdateService, AuthenticationService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CertificationService certificationService;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserReadService, UserCreateService, User
     @Transactional
     @Override
     public User update(long id, UserUpdate userUpdate) {
-        User user = getById(id);
+        User user = this.getById(id);
         user = user.update(userUpdate);
         user = userRepository.save(user);
         return user;
